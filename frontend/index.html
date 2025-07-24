@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Tasks</h1>
+        <button id="logout" style="display: none;">Cerrar Sesion</button>
+    </nav>
+    <main>
+    <section class="add-Task">
+        <h2>Add Task</h2>
+        <form id="taskForm">
+            <input type="text" placeholder="Escribe tu tarea" id="taskInput" required>
+            <button type="button" id="add">Agregar</button>
+            <div id="error-message" style="color:red; display: none;"></div>
+            <div id="success-message" style="color:green; display: none;"></div>
+            <!-- Recuerda poner el estilo en css -->
+        </form>
+    </section>
+    <section class="task-List"></section>
+        <h2>Task List</h2>
+        <ul class="tasks" id="tasks"></ul>
+    </section>
+    </main>
+
+    
+    <script src="./js/task.js"></script>
+</body>
+</html>
