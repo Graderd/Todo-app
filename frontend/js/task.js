@@ -56,7 +56,7 @@ async function fetchTasks(){
                 "Authorization": `Bearer ${token}`
             }
         });
-        
+
         if(!response) return;
         if(!response.ok) throw new Error("Error al obtener las tareas");
 
@@ -259,6 +259,12 @@ function setupLogoutButton(){
 window.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
     const logoutBtn = document.getElementById("logout");
+    const nombre = localStorage.getItem("nombre");
+    const usuarioNombreElemento = document,getElementById("usuarioNombre");
+
+    if(usuarioNombreElemento && nombre){
+        usuarioNombreElemento.textContent = `Hola, ${nombre}`;
+    }
     
     if(!token) {
         showError("Por favor, inicie sesion.");
@@ -283,6 +289,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     taskInput.disabled = false;
 
     await fetchTasks();
+    fetchTasks();
     renderTasks();
     setupEventListeners();
     setupLogoutButton();
