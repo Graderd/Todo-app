@@ -3,6 +3,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const taskRoutes = require("./routes/taskRoutes");
 const authRoutes = require("./routes/authRoutes");
+const authMiddleware = require("./middlewares/authMiddleware");
 
 const app = express();
 const port = process.env.PORT || 2808;
@@ -16,6 +17,7 @@ app.use(express.json());
 //Rutas
 app.use("/api/tasks",taskRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/tasks", authMiddleware);
 
 //Conexion a DB y arranque del servidor
 connectDB().then(() => {

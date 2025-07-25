@@ -3,6 +3,12 @@ let tasks = [];
 const taskList = document.getElementById("tasks");
 const botonAdd = document.getElementById("add");
 const taskInput = document.getElementById("taskInput");
+const token = localStorage.getItem("token");
+
+if(!token){
+    alert("⚠️ Debes iniciar sesión para acceder a tus tareas.")
+    window.location.href = ("login.html");
+}
 
 function showError(msg) {
     const errorDiv = document.getElementById("error-message");
@@ -43,7 +49,14 @@ async function fetchTasks(){
     taskList.innerHTML = "<li>Cargando tarea...</li>";
 
     try{
-        const response = await secureFetch("http://localhost:2808/api/tasks");
+        const response = await secureFetch("http://localhost:2808/api/tasks", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        
         if(!response) return;
         if(!response.ok) throw new Error("Error al obtener las tareas");
 
