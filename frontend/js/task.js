@@ -34,6 +34,7 @@ async function secureFetch(url, options = {}){
 
     if(response.status === 401){
         localStorage.removeItem("token");
+        localStorage.removeItem("nombre");
         showError("Sesión expirada. Por favor, inicie sesión nuevamente.");
 
         setTimeout(() => {
@@ -56,7 +57,7 @@ async function fetchTasks(){
                 "Authorization": `Bearer ${token}`
             }
         });
-        
+
         if(!response) return;
         if(!response.ok) throw new Error("Error al obtener las tareas");
 
@@ -250,6 +251,7 @@ function setupLogoutButton(){
     if (logoutButton) {
         logoutButton.addEventListener("click", () => {
             localStorage.removeItem("token");
+            localStorage.removeItem("nombre");
             window.location.href = "login.html";
         });
     }
@@ -258,7 +260,17 @@ function setupLogoutButton(){
 //Inicializacion de la aplicación
 window.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
+    const nombre = localStorage.getItem("nombre");
+    const usuarioNombreElemento = document.getElementById("usuarioNombre");
     const logoutBtn = document.getElementById("logout");
+
+    if(usuarioNombreElemento && nombre){
+        usuarioNombreElemento.textContent = `Hola, ${nombre}`;
+    }
+
+    if(logoutBtn){
+        logoutBtn.style.display = "inline-block";
+    }
     
     if(!token) {
         showError("Por favor, inicie sesion.");
@@ -269,15 +281,6 @@ window.addEventListener("DOMContentLoaded", async () => {
         }, 2000);
         return;
     }
-
-    logoutBtn.style.display = "inline-block";
-    logoutBtn.addEventListener("click", () =>{
-        localStorage.removeItem("token");
-        showSuccess("Sesion cerrada correctamente.")
-        setTimeout(() => {
-            window.location.href = "login.html"
-        }, 2000);
-    });
 
     botonAdd.disabled = false;
     taskInput.disabled = false;

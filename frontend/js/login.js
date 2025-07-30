@@ -12,6 +12,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         });
 
         const data = await response.json();
+        
         if (!response.ok) {
             throw new Error(data.error || "Error al iniciar sesion");
         }
