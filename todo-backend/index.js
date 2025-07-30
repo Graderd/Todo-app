@@ -17,7 +17,6 @@ app.use(express.json());
 //Rutas
 app.use("/api/tasks",taskRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/tasks", authMiddleware);
 
 //Conexion a DB y arranque del servidor
 connectDB().then(() => {
