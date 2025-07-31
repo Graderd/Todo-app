@@ -105,7 +105,7 @@ function createTaskElement(task) {
 
     //Evento para cambiar estado completado
     checkbox.addEventListener("change", async () => {
-        console.log(`Actualizando tarea con ID: ${task._id}`)
+        //console.log(`Actualizando tarea con ID: ${task._id}`)
         task.completado = checkbox.checked;
         try {
             await updateTaskOnServer(task);
