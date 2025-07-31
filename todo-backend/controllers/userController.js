@@ -5,7 +5,7 @@ const register = async (req, res) => {
         const {name, email, password} = req.body;
         const result = await registerUser(name, email, password);
 
-        const userSafe = {...result.user};
+        const userSafe = result.user.toObject();
         delete userSafe.password;
 
         res.status(201).json({user: userSafe, token: result.token });
