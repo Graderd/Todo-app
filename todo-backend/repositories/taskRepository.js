@@ -1,29 +1,35 @@
-const mongoose = require("mongoose");
 const Task = require("../models/taskModel");
 
-async function getAllTasks(){
+async function getAllTasks() {
     return await Task.find();
 }
 
-async function createTask(taskData) {
+async function createTask(taskData){
     const task = new Task(taskData);
     return await task.save();
 }
 
 async function updateTask(id, updates) {
-    const result = await Task.findByIdAndUpdate(id, updates, { new: true });
-    return result;
+    return await Task.findByIdAndUpdate(id, updates, { new: true });
 }
 
 async function deleteTask(id) {
-    const result = await Task.findByIdAndDelete(id);
-    return result !== null;
+    return await Task.findByIdAndDelete(id);
+}
+
+async function findByUserId(userId){
+    return await Task.find({ userId }).sort({ createdAt: -1 });
+}
+
+async function findByIdAndUser(id, userId) {
+    return await Task.findOne({ _id: id, userId });
 }
 
 module.exports = {
-    setTasksCollection,
     getAllTasks,
     createTask,
     updateTask,
     deleteTask,
+    findByUserId,
+    findByIdAndUser,
 };

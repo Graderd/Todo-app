@@ -5,20 +5,21 @@ const register = async (req, res) => {
         const {name, email, password} = req.body;
         const result = await registerUser(name, email, password);
 
-        const userSafe = result.user.toObject();
-        delete userSafe.password;
-
-        res.status(201).json({user: userSafe, token: result.token });
+        res.status(201).json({user: result.user, token: result.token });
     }catch (error){
+        console.error("Error al registrar usuario:", error.message);
         res.status(400).json({ error: error.message});
     }
 };
 
 const login = async (req, res) => {
     try {
-        const result = await loginUser(req.body.email, req.body.password);
+        const { email, password } = req.body;
+        const result = await loginUser(email, password);
+
         res.status(200).json({ token: result.token, name: result.user.name });
     }catch (error) {
+        console.error("Error al iniciar sesión:", error.message);
         res.status(401).json({ error: error.message });
     }
 };
