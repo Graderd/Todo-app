@@ -1,4 +1,3 @@
-const { Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
@@ -15,13 +14,20 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,
         trim: true,
-        match: /.+\@.+\..+/
+        match: /^\S+@\S+\.\S+$/
     },
     password: {
         type: String,
         required: true,
         minlength: 6,
         maxlength: 100
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    verificationToken: {
+        type: String,
     },
 }, { timestamps: true });
 
