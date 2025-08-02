@@ -1,19 +1,29 @@
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const form = e.target;
+
     const name = document.getElementById("name").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (password !== confirmPassword) {
+        alert("Las contraseñas no coinciden.");
+        form.reset();
+        return;
+    }
 
     try{
-        const response = await fetch("http://localhost:2808/api/auth/register", {
+        const res = await fetch("http://localhost:2808/api/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, email, password })
         });
 
-        const data = await response.json();
-        if (!response.ok) {
+        const data = await res.json();
+        
+        if (!res.ok) {
             throw new Error(data.error || "Error al registrarse");
         }
 

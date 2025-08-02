@@ -12,7 +12,12 @@ async function createTask(taskData){
     }
 
     taskData.texto = taskData.texto.trim();
-    taskData.completada = !!taskData.completada;
+
+    if(taskData.texto.length > 200){
+        throw new Error("El texto de la tarea es demasiado largo");
+    }
+
+    taskData.completado = !!taskData.completado;
 
     return await taskRepository.createTask(taskData);
 }
@@ -28,10 +33,17 @@ async function updateTask(id, userId, updates){
         if(typeof updates.texto !== 'string' || updates.texto.trim() === '') {
             throw new Error("Texto invalido");
         }
-        task.texto = updates.texto.trim();
+
+        const trimmedText = updates.texto.trim();
+
+        if (trimmedText.length > 200) {
+            throw new Error("El texto de la tarea es demasiado largo");
+        }
+
+        task.texto = trimmedText;
     }
-    if (updates.completada !== undefined) {
-        task.completado = !!updates.completada;
+    if (updates.completado !== undefined) {
+        task.completado = !!updates.completado;
     }
 
     const updated = await task.save();

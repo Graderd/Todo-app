@@ -6,7 +6,7 @@ const { generateToken } = require("../utils/tokenUtils");
 const sendVerificationEmail = require("../utils/emailSender");
 
 // Registro de usuario
-const registerUser = async (name, email, password) => {
+const registerUser = async (name, email, password, confirmPassword) => {
 
     if (!name || typeof name !== "string" || name.trim().length < 2){
         throw new Error("Nombre invalido");
@@ -18,6 +18,10 @@ const registerUser = async (name, email, password) => {
 
     if (!password || !validator.isStrongPassword(password, { minLength: 6, minNumbers: 1 })) {
         throw new Error("Contraseña invalida. Debe tener al menos 6 caracteres y un numero.");
+    }
+
+    if (password !== confirmPassword) {
+        throw new Error("Las contraseñas no coinciden.");
     }
 
     const existingUser = await User.findOne({ email });
@@ -41,13 +45,6 @@ const registerUser = async (name, email, password) => {
     await sendVerificationEmail(user.email, user.name, verificationLink);
 
     return { message: "Usuario registrado exitosamente. Por favor verifica tu correo electronico." };
-
-    const token = generateToken({ userId: user._id });
-
-    const userObj = user.toObject();
-    delete userObj.password;
-
-    return { user: userObj, token };
 };
 
 //Inicio de Sesion
