@@ -18,7 +18,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
         const res = await fetch("http://localhost:2808/api/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password })
+            body: JSON.stringify({ name, email, password})
         });
 
         const data = await res.json();

@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
@@ -7,8 +9,6 @@ const authMiddleware = require("./middlewares/authMiddleware");
 
 const app = express();
 const port = process.env.PORT || 2808;
-
-require("dotenv").config();
 
 //Middlewares globales
 app.use(cors());

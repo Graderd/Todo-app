@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 function authMiddleware(req, res, next){
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || typeof authHeader || !authHeader.startsWith("Bearer ")){
+    if (!authHeader || !authHeader.startsWith("Bearer ")){
         return res.status(401).json({ error: "Token no proporcionado"});
     }
 

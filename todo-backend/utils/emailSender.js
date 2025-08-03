@@ -24,3 +24,5 @@ async function sendVerificationEmail(to, name, link) {
 }
 
 module.exports = sendVerificationEmail;
+
+
