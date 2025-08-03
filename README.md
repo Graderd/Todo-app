@@ -49,7 +49,7 @@ EMAIL_USER=tu_correo@gmail.com
 EMAIL_PASS=contraseña_app_de_gmail
 FRONTEND_URL=http://localhost:5173
 
-🛑 Recuerda usar una contraseña de aplicación en Gmail, no tu contraseña real. Cómo generar una
+🛑 Recuerda usar una contraseña de aplicación en Gmail, no tu contraseña real.
 
 4. Inicia el servidor backend:
 
