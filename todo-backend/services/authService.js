@@ -6,7 +6,7 @@ const { generateToken } = require("../utils/tokenUtils");
 const sendVerificationEmail = require("../utils/emailSender");
 
 // Registro de usuario
-const registerUser = async (name, email, password, confirmPassword) => {
+const registerUser = async (name, email, password) => {
 
     if (!name || typeof name !== "string" || name.trim().length < 2){
         throw new Error("Nombre invalido");
@@ -16,12 +16,14 @@ const registerUser = async (name, email, password, confirmPassword) => {
         throw new Error("Correo electronico invalido.");
     }
 
-    if (!password || !validator.isStrongPassword(password, { minLength: 6, minNumbers: 1 })) {
+    if (!password || !validator.isStrongPassword(password, {
+        minLength: 6,
+        minNumbers: 1,
+        minLowercase: 0,
+        minUppercase: 0,
+        minSymbols: 0
+    })) {
         throw new Error("Contraseña invalida. Debe tener al menos 6 caracteres y un numero.");
-    }
-
-    if (password !== confirmPassword) {
-        throw new Error("Las contraseñas no coinciden.");
     }
 
     const existingUser = await User.findOne({ email });
@@ -41,7 +43,7 @@ const registerUser = async (name, email, password, confirmPassword) => {
 
     await user.save();
 
-    const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+    const verificationLink = `http://localhost:2808/api/auth/verify-email?token=${verificationToken}`;
     await sendVerificationEmail(user.email, user.name, verificationLink);
 
     return { message: "Usuario registrado exitosamente. Por favor verifica tu correo electronico." };
@@ -62,6 +64,10 @@ const loginUser = async (email, password) => {
 
     if(!user){
         throw new Error("Usuario no encontrado.");
+    }
+
+    if (!user.isVerified) {
+        throw new Error("Por favor verifica tu correo electronico antes de iniciar sesion.");
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);

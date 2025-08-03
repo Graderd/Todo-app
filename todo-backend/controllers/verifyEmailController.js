@@ -1,4 +1,4 @@
-const user = require("../models/userModel");
+const User = require("../models/userModel");
 
 const verifyEmail = async (req, res) => {
     const { token } = req.query;
@@ -13,7 +13,9 @@ const verifyEmail = async (req, res) => {
     user.verificationToken = undefined;
     await user.save();
 
-    res.status(200).json({ message: "Correo electronico verificado exitosamente." });
+    res.redirect("http://localhost:5173/login.html");
+    // Respuesta alternativa si no se redirige
+    res.status(200).json({ message: "Correo verificado exitosamente. Puedes iniciar sesión ahora." });
 };
 
 module.exports = { verifyEmail };
