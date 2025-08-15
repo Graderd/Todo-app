@@ -6,7 +6,7 @@ const { generateToken } = require("../utils/tokenUtils");
 const sendVerificationEmail = require("../utils/emailSender");
 
 // Registro de usuario
-const registerUser = async (name, email, password) => {
+const registerUser = async (name, email, password, confirmPassword) => {
 
     if (!name || typeof name !== "string" || name.trim().length < 2){
         throw new Error("Nombre invalido");
@@ -16,14 +16,12 @@ const registerUser = async (name, email, password) => {
         throw new Error("Correo electronico invalido.");
     }
 
-    if (!password || !validator.isStrongPassword(password, {
-        minLength: 6,
-        minNumbers: 1,
-        minLowercase: 0,
-        minUppercase: 0,
-        minSymbols: 0
-    })) {
+    if (!password || password.length < 6 || !/\d/.test(password)) {
         throw new Error("Contraseña invalida. Debe tener al menos 6 caracteres y un numero.");
+    }
+
+    if (password !== confirmPassword) {
+        throw new Error("Las contraseñas no coinciden.");
     }
 
     const existingUser = await User.findOne({ email });
@@ -43,15 +41,23 @@ const registerUser = async (name, email, password) => {
 
     await user.save();
 
-    const verificationLink = `http://localhost:2808/api/auth/verify-email?token=${verificationToken}`;
+    const verificationLink = `${process.env.BACKEND_URL || "http://localhost:2808"}/api/auth/verify-email?token=${verificationToken}`;
     await sendVerificationEmail(user.email, user.name, verificationLink);
 
-    return { message: "Usuario registrado exitosamente. Por favor verifica tu correo electronico." };
+    const token = generateToken({ userId: user._id });
+
+    const userObj = user.toObject();
+    delete userObj.password; // No enviar la contraseña en la respuesta
+
+    return { 
+        message: "Usuario registrado exitosamente. Por favor verifica tu correo electronico.",
+        user: userObj,
+        token
+    };
 };
 
 //Inicio de Sesion
 const loginUser = async (email, password) => {
-
     if(!email || !validator.isEmail(email.trim())) {
         throw new Error("Correo electronico invalido.");
     }
@@ -61,7 +67,6 @@ const loginUser = async (email, password) => {
     }
 
     const user = await User.findOne({ email: email.trim().toLowerCase() });
-
     if(!user){
         throw new Error("Usuario no encontrado.");
     }
